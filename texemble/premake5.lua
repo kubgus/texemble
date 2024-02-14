@@ -26,3 +26,6 @@ project "texemble"
         defines { "RELEASE", "TXM_RELEASE" }
         runtime "Release"
         optimize "on"
+
+    filter "system:windows"
+        defines { "WINDOWS", "TXM_WINDOWS" }

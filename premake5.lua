@@ -7,6 +7,3 @@ workspace "texemble"
 
     include "texemble"
     include "sandbox"
-
-    filter "system:windows"
-        defines { "WINDOWS", "TXM_WINDOWS" }
