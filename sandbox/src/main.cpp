@@ -13,14 +13,20 @@ int main() {
 
     myscene.add(&player);
 
+    txm::input in;
+    in.handle([&](char input) {
+        if (input == 'w') player.y--;
+        if (input == 's') player.y++;
+        if (input == 'a') player.x--;
+        if (input == 'd') player.x++;
+    });
+
     int framecount = 0;
-    txm::gameloop::fpset(1);
+    txm::gameloop::fpset(24);
     txm::gameloop::start([&]() {
 
         myscene.begin();
         
-        player.x += 1;
-
         myscene.render();
 
         framecount++;
