@@ -1,0 +1,12 @@
+# Binaries
+bin/
+obj/
+
+# Make
+.cache/
+*.make
+Makefile
+
+# Compilation Database
+compile_commands.json
+compile_flags.json
