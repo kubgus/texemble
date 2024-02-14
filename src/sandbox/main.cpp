@@ -1,9 +1,25 @@
-#include <iostream>
-
 #include <texemble.h>
 
-int main() {
-    txm::scene myscene = { 64, 128 };
+#define WIDTH 64
+#define HEIGHT 128
 
-    std::cout << myscene.dimensions().x << std::endl;
+int main() {
+    txm::scene<WIDTH, HEIGHT> myscene;
+
+    txm::entity player = { 0, 0, txm::sprite { 2, 2, {
+        'x', 'x',
+        'x', 'x',
+    }}};
+
+    myscene.add(player);
+
+    while (true) {
+
+        myscene.begin();
+        
+        player.x += 1;
+
+        myscene.render();
+
+    }
 }

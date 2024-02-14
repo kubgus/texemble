@@ -11,6 +11,9 @@ workspace "texemble"
         optimize "Speed"
         flags { "LinkTimeOptimization" }
 
+    filter "system:windows"
+        defines { "WINDOWS" }
+
 outdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 project "texemble"

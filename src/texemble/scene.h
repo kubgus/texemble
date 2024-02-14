@@ -1,22 +1,20 @@
 #pragma once
 
-#include "vec2.h"
+#include <vector>
+
+#include "entity.h"
 
 namespace txm {
 
+    template <int width, int height>
     class scene {
     public:
-        scene(int width, int height)
-            : _width(width), _height(height) {}
+        void add(entity ent);
 
-        inline vec2 dimensions() const { return _dim; }
+        void begin() const;
+        void render() const;
     private:
-        union {
-            vec2 _dim;
-            struct {
-                int _width, _height;
-            };
-        };
+        std::vector<entity> _entities;
     };
 
 }
