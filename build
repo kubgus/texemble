@@ -1,0 +1,12 @@
+echo "Running premake5..."
+premake5 gmake2
+
+echo
+
+echo "Cleaning make..."
+make clean
+
+echo
+
+echo "Running make..."
+bear -- make
