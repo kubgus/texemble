@@ -15,23 +15,26 @@
 namespace txm {
 
     template <int width, int height>
-    void scene<width, height>::add(entity ent) {
+    inline void scene<width, height>::add(entity* ent) {
         _entities.push_back(ent);
     }
 
     template <int width, int height>
-    void scene<width, height>::begin() const {
+    inline void scene<width, height>::begin() const {
         CLEAR();
     }
 
     template <int width, int height>
     void scene<width, height>::render() const {
         std::array<char, width * height> renderspace;
+        renderspace.fill(' ');
         for (int i = 0; i < _entities.size(); i++) {
-            entity ent = _entities[i];
-            for (int y = 0; y < ent.y; y++) {
-                for (int x = 0; x < ent.x; x++) {
-                    renderspace[(ent.y + y) * ent.spr.width + x] = ent.spr.chars[y * ent.spr.width + x];
+            entity ent = *_entities[i];
+            for (int y = 0; y < ent.spr.height; y++) {
+                for (int x = 0; x < ent.spr.width; x++) {
+                    const int chardown = ((ent.y + y) % height) * width;
+                    const int charright = (ent.x + x) % width;
+                    renderspace[chardown + charright] = ent.spr.chars[y * ent.spr.width + x];
                 }
             }
         }
@@ -41,5 +44,4 @@ namespace txm {
             std::cout << std::endl;
         }
     }
-
 }

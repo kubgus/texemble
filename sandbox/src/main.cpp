@@ -1,7 +1,7 @@
 #include <texemble.h>
 
 #define WIDTH 64
-#define HEIGHT 128
+#define HEIGHT 32
 
 int main() {
     txm::scene<WIDTH, HEIGHT> myscene;
@@ -11,9 +11,11 @@ int main() {
         'x', 'x',
     }}};
 
-    myscene.add(player);
+    myscene.add(&player);
 
-    while (true) {
+    int framecount = 0;
+    txm::gameloop::fpset(1);
+    txm::gameloop::start([&]() {
 
         myscene.begin();
         
@@ -21,5 +23,7 @@ int main() {
 
         myscene.render();
 
-    }
+        framecount++;
+
+    });
 }
