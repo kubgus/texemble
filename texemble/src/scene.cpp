@@ -32,8 +32,10 @@ namespace txm {
             entity ent = *_entities[i];
             for (int y = 0; y < ent.spr.height; y++) {
                 for (int x = 0; x < ent.spr.width; x++) {
-                    const int chardown = ((ent.y + y) % height) * width;
-                    const int charright = (ent.x + x) % width;
+                    const unsigned int rendenty = ent.y < 0 ? height + ent.y : ent.y;
+                    const unsigned int rendentx = ent.x < 0 ? width + ent.x : ent.x;
+                    const unsigned int chardown = ((rendenty + y) % height) * width;
+                    const unsigned int charright = (rendentx + x) % width;
                     renderspace[chardown + charright] = ent.spr.chars[y * ent.spr.width + x];
                 }
             }
