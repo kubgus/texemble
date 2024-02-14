@@ -20,7 +20,9 @@ namespace txm {
         void handle(std::function<void(char latest)> handle);
     private:
         std::thread _handler;
+#ifndef TXM_WINDOWS
         struct termios _st, _nd;
+#endif
     };
 
 }

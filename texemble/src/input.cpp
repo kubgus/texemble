@@ -13,7 +13,9 @@ namespace txm {
     }
 
     input::~input() {
+#ifndef TXM_WINDOWS
         tcsetattr(STDIN_FILENO, TCSANOW, &_st);
+#endif
 
         _handler.join();
     }
