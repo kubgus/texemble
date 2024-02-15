@@ -20,7 +20,7 @@ namespace txm {
     }
 
     template <int width, int height>
-    inline void scene<width, height>::begin() const {
+    inline void scene<width, height>::clear() const {
         CLEAR();
     }
 

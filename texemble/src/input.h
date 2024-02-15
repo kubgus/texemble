@@ -14,17 +14,18 @@ namespace txm {
 
     class input {
     public:
-        input();
-        ~input();
-
-        void handle(std::function<void(char latest)> handle);
-        void exit();
+        static void handle(std::function<void(char latest)> handle);
+        static void finish();
     private:
-        bool _running;
-        std::thread _handler;
+        static bool _running;
+        static inline std::thread _handler;
+
 #ifndef TXM_WINDOWS
-        struct termios _st, _nd;
+        static inline struct termios _st, _nd;
 #endif
+
+        static inline void _init();
+        static inline void _term();
     };
 
 }

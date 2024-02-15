@@ -24,16 +24,15 @@ int main() {
     myscene.add(&player);
     myscene.add(&reward);
 
-    txm::input in;
-    in.handle([&](char input) {
+    txm::input::handle([&](char input) {
         if (input == 'k') player.y--;
         if (input == 'j') player.y++;
         if (input == 'h') player.x--;
         if (input == 'l') player.x++;
 
         if (input == 'q') {
-            in.exit();
-            txm::gameloop::end();
+            txm::input::finish();
+            txm::gameloop::stop();
         }
     });
 
@@ -41,7 +40,7 @@ int main() {
     txm::gameloop::fpset(24);
     txm::gameloop::start([&]() {
 
-        myscene.begin();
+        myscene.clear();
 
         if (txm::collision::check(player, reward)) {
             reward.x = random(0, WIDTH - 1);

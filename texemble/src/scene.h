@@ -11,7 +11,7 @@ namespace txm {
     public:
         inline void add(entity* ent);
 
-        inline void begin() const;
+        inline void clear() const;
         void render() const;
     private:
         std::vector<entity*> _entities;
