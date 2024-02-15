@@ -13,13 +13,6 @@ int random(int min, int max) {
     return distribution(gen);
 }
 
-template <int width, int height>
-void remove(int index, txm::entity* ent, std::vector<txm::entity*>& list, txm::scene<width, height>& scene) {
-    if (scene.contains(ent)) scene.remove(ent);
-    list.erase(list.begin() + index);
-    delete ent;
-}
-
 int main() {
     txm::scene<WIDTH, HEIGHT> myscene;
 
@@ -36,8 +29,8 @@ int main() {
     txm::entity player = { WIDTH / 2, HEIGHT / 2, plane };
     myscene.add(&player);
 
-    std::vector<txm::entity*> projectiles;
-    std::vector<txm::entity*> enemies;
+    txm::layer projectiles = &myscene;
+    txm::layer enemies = &myscene;
 
     txm::input::handle([&](char in) {
         if (in == 'w') player.y--;
@@ -45,7 +38,7 @@ int main() {
         if (in == 'a') player.x--;
         if (in == 'd') player.x++;
 
-        if (in == ' ') projectiles.push_back(new txm::entity { player.x + 2, player.y, bullet});
+        if (in == ' ') projectiles.add(new txm::entity { player.x + 2, player.y, bullet});
 
         if (in == 'q') txm::gameloop::stop();
     });
@@ -62,33 +55,30 @@ int main() {
         std::cout << "SCORE: " << score << "/" << goal << std::endl;
 
         if (framecount % 64 == 0)
-            enemies.push_back(new txm::entity { random(0, WIDTH - 1), 0, asteroid });
+            enemies.add(new txm::entity { random(0, WIDTH - 1), 0, asteroid });
 
-        for (int i = 0; i < projectiles.size(); i++) {
-            txm::entity* projectile = projectiles[i];
+        for (txm::entity* projectile : projectiles.list()) {
             if (!myscene.contains(projectile)) myscene.add(projectile);
             projectile->y--;
 
             if (projectile->y <= 0) {
-                remove(i, projectile, projectiles, myscene);
+                projectiles.remove(projectile);
                 continue;
             }
         }
 
-        for (int i = 0; i < enemies.size(); i++) {
-            txm::entity* enemy = enemies[i];
-            if (!myscene.contains(enemy)) myscene.add(enemy);
+        for (txm::entity* enemy : enemies.list()) {
             if (framecount % 4 == 0) enemy->y++;
 
             if (enemy->y > HEIGHT - 2) {
                 score--;
-                remove(i, enemy, enemies, myscene);
+                enemies.remove(enemy);
             }
 
-            for (txm::entity* projectile : projectiles) {
+            for (txm::entity* projectile : projectiles.list()) {
                 if (txm::collision::aabb(*projectile, *enemy)) {
                     score++;
-                    remove(i, enemy, enemies, myscene);
+                    enemies.remove(enemy);
                     break;
                 }
             }

@@ -6,6 +6,9 @@
 
 #include "gameloop.h"
 
+#include "layer.h"
+#include "layer.cpp"
+
 #include "input.h"
 
 #include "scene.h"
