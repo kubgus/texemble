@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <thread>
+#include <queue>
 
 #ifndef TXM_WINDOWS
 #include <termios.h>
@@ -14,11 +15,16 @@ namespace txm {
 
     class input {
     public:
-        static void handle(std::function<void(char latest)> handle);
+        static std::thread listen();
         static void finish();
+
+        static void handle(std::function<void(char in)> handler);
+
+        static void evaluate();
     private:
         static bool _running;
-        static inline std::thread _handler;
+        static inline std::queue<char> _queue;
+        static inline std::function<void(char)> _handler;
 
 #ifndef TXM_WINDOWS
         static inline struct termios _st, _nd;

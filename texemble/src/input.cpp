@@ -6,11 +6,11 @@ namespace txm {
 
     bool input::_running = false;
 
-    void input::handle(std::function<void(char latest)> handle) {
+    std::thread input::listen() {
         _init();
 
         _running = true;
-        _handler = std::thread([&]() {
+        return std::thread([&]() {
             while (_running) {
                 char input = '\0';
 #ifndef TXM_WINDOWS
@@ -18,17 +18,26 @@ namespace txm {
 #else
                 if (_kbhit()) input = _getch();
 #endif
-                handle(input);
+                _queue.push(input);
             }
 
             _term();
         });
-
-        _handler.detach();
     }
 
     void input::finish() {
         _running = false;
+    }
+
+    void input::handle(std::function<void(char in)> handler) {
+        _handler = handler;
+    }
+
+    void input::evaluate() {
+        while (!_queue.empty()) {
+            _handler(_queue.front());
+            _queue.pop();
+        }
     }
 
     void input::_init() {

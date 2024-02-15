@@ -1,5 +1,6 @@
 #include "scene.h"
 
+#include <algorithm>
 #include <array>
 #include <cstdlib>
 #include <iostream>
@@ -15,12 +16,28 @@
 namespace txm {
 
     template <int width, int height>
-    inline void scene<width, height>::add(entity* ent) {
-        _entities.push_back(ent);
+    void scene<width, height>::add(entity* ent) {
+        _entities.insert(ent);
     }
 
     template <int width, int height>
-    inline void scene<width, height>::clear() const {
+    void scene<width, height>::remove(entity* ent) {
+        auto element = std::find(_entities.begin(), _entities.end(), ent);
+        if (element != _entities.end()) _entities.erase(element);
+    }
+
+    template <int width, int height>
+    bool scene<width, height>::contains(entity* ent) {
+        return (std::find(_entities.begin(), _entities.end(), ent) != _entities.end());
+    }
+
+    template <int width, int height>
+    std::set<entity*> scene<width, height>::list() {
+        return _entities;
+    }
+
+    template <int width, int height>
+    void scene<width, height>::clear() const {
         CLEAR();
     }
 
@@ -28,15 +45,14 @@ namespace txm {
     void scene<width, height>::render() const {
         std::array<char, width * height> renderspace;
         renderspace.fill(' ');
-        for (int i = 0; i < _entities.size(); i++) {
-            entity ent = *_entities[i];
-            for (int y = 0; y < ent.spr.height; y++) {
-                for (int x = 0; x < ent.spr.width; x++) {
-                    const unsigned int rendenty = ent.y < 0 ? height + ent.y : ent.y;
-                    const unsigned int rendentx = ent.x < 0 ? width + ent.x : ent.x;
+        for (const auto& ent : _entities) {
+            for (int y = 0; y < ent->spr.height; y++) {
+                for (int x = 0; x < ent->spr.width; x++) {
+                    const unsigned int rendenty = ent->y < 0 ? height + ent->y : ent->y;
+                    const unsigned int rendentx = ent->x < 0 ? width + ent->x : ent->x;
                     const unsigned int chardown = ((rendenty + y) % height) * width;
                     const unsigned int charright = (rendentx + x) % width;
-                    renderspace[chardown + charright] = ent.spr.chars[y * ent.spr.width + x];
+                    renderspace[chardown + charright] = ent->spr.chars[y * ent->spr.width + x];
                 }
             }
         }
