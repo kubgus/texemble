@@ -13,11 +13,6 @@ int random(int min, int max) {
     return distribution(gen);
 }
 
-void print(std::set<txm::entity*> list) {
-    for (const auto& el : list) std::cout << el->x << ", ";
-    std::cout << std::endl;
-}
-
 template <int width, int height>
 void remove(int index, txm::entity* ent, std::vector<txm::entity*>& list, txm::scene<width, height>& scene) {
     if (scene.contains(ent)) scene.remove(ent);
@@ -29,16 +24,14 @@ int main() {
     txm::scene<WIDTH, HEIGHT> myscene;
 
     txm::sprite plane = { 5, 3, {
-        ' ', ' ', 'T', ' ', ' ',
-        '<', '=', '|', '=', '>',
-        ' ', ' ', '-', ' ', ' ',
+        "  T  ",
+        "<=I=>",
+        "  -  ",
     }};
 
-    txm::sprite bullet = { 1, 1, { '*' }};
+    txm::sprite bullet = { 1, 1, "*"};
 
-    txm::sprite asteroid = { 2, 2, {
-        '#', '#', '#', '#',
-    }};
+    txm::sprite asteroid = { 2, 2, "####"};
 
     txm::entity player = { WIDTH / 2, HEIGHT / 2, plane };
     myscene.add(&player);
@@ -93,14 +86,14 @@ int main() {
             }
 
             for (txm::entity* projectile : projectiles) {
-                if (txm::collision::check(*projectile, *enemy)) {
+                if (txm::collision::aabb(*projectile, *enemy)) {
                     score++;
                     remove(i, enemy, enemies, myscene);
                     break;
                 }
             }
             
-            if (txm::collision::check(player, *enemy)) {
+            if (txm::collision::aabb(player, *enemy)) {
                 txm::gameloop::stop();
                 std::cout << "YOU LOST!" << std::endl;
             }

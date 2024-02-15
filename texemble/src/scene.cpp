@@ -46,13 +46,13 @@ namespace txm {
         std::array<char, width * height> renderspace;
         renderspace.fill(' ');
         for (const auto& ent : _entities) {
-            for (int y = 0; y < ent->spr.height; y++) {
-                for (int x = 0; x < ent->spr.width; x++) {
+            for (int y = 0; y < ent->h(); y++) {
+                for (int x = 0; x < ent->w(); x++) {
                     const unsigned int rendenty = ent->y < 0 ? height + ent->y : ent->y;
                     const unsigned int rendentx = ent->x < 0 ? width + ent->x : ent->x;
                     const unsigned int chardown = ((rendenty + y) % height) * width;
                     const unsigned int charright = (rendentx + x) % width;
-                    renderspace[chardown + charright] = ent->spr.chars[y * ent->spr.width + x];
+                    renderspace[chardown + charright] = ent->s.c[y * ent->w() + x];
                 }
             }
         }

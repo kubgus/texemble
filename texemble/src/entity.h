@@ -6,7 +6,10 @@ namespace txm {
     
     struct entity {
         int x, y;
-        sprite spr;
+        sprite s;
+
+        inline int w() const { return s.w; }
+        inline int h() const { return s.h; }
     };
 
 }

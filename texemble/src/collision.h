@@ -6,7 +6,7 @@ namespace txm {
 
     class collision {
     public:
-        static bool check(const entity& left, const entity& right);
+        static bool aabb(const entity& left, const entity& right);
     };
 
 }
