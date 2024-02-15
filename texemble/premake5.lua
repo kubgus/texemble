@@ -29,3 +29,7 @@ project "texemble"
 
     filter "system:windows"
         defines { "WINDOWS", "TXM_WINDOWS" }
+
+    filter "system:linux"
+        defines { "LINUX", "TXM_LINUX" }
+        links { "pthread" }
