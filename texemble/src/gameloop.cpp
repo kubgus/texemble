@@ -4,11 +4,13 @@
 
 namespace txm {
 
-    int gameloop::fps = 24;
-    std::chrono::duration<double> gameloop::framedur(1.0 / fps);
+    bool gameloop::_running = false;
+    int gameloop::_fps = 24;
+    std::chrono::duration<double> gameloop::_framedur(1.0 / _fps);
 
     void gameloop::start(std::function<void()> fun) {
-        while (true) {
+        _running = true;
+        while (_running) {
             auto start = std::chrono::high_resolution_clock::now();
 
             fun();
@@ -16,13 +18,17 @@ namespace txm {
             auto end = std::chrono::high_resolution_clock::now();
 
             auto elapsed = std::chrono::duration_cast<std::chrono::duration<double>>(end - start);
-            std::this_thread::sleep_for(framedur - elapsed);
+            std::this_thread::sleep_for(_framedur - elapsed);
         }
     }
 
+    void gameloop::end() {
+        _running = false;
+    }
+
     void gameloop::fpset(int framerate) {
-        fps = framerate;
-        framedur = std::chrono::duration<double>(1.0 / fps);
+        _fps = framerate;
+        _framedur = std::chrono::duration<double>(1.0 / _fps);
     }
 
 }

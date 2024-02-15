@@ -18,7 +18,9 @@ namespace txm {
         ~input();
 
         void handle(std::function<void(char latest)> handle);
+        void exit();
     private:
+        bool _running;
         std::thread _handler;
 #ifndef TXM_WINDOWS
         struct termios _st, _nd;

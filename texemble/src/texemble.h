@@ -1,5 +1,7 @@
 #pragma once
 
+#include "collision.h"
+
 #include "entity.h"
 
 #include "gameloop.h"

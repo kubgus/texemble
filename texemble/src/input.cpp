@@ -22,8 +22,9 @@ namespace txm {
 
 
     void input::handle(std::function<void(char latest)> handle) {
+        _running = true;
         _handler = std::thread([&]() {
-            while (true) {
+            while (_running) {
             char input = '\0';
 #ifndef TXM_WINDOWS
                 read(STDIN_FILENO, &input, 1);
@@ -33,6 +34,10 @@ namespace txm {
                 handle(input);
             }
         });
+    }
+
+    void input::exit() {
+        _running = false;
     }
 
 }
