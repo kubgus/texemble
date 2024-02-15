@@ -10,7 +10,7 @@ namespace txm {
         static void start(std::function<void()> fun);
         static void stop();
 
-        static void fpset(int fps);
+        static void setframerate(int fps);
     private:
         static bool _running;
 

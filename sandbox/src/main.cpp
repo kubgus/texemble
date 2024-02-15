@@ -37,7 +37,7 @@ int main() {
     });
 
     int framecount = 0;
-    txm::gameloop::fpset(24);
+    txm::gameloop::setframerate(24);
     txm::gameloop::start([&]() {
 
         myscene.clear();

@@ -5,6 +5,7 @@
 namespace txm {
 
     bool gameloop::_running = false;
+
     int gameloop::_fps = 24;
     std::chrono::duration<double> gameloop::_framedur(1.0 / _fps);
 
@@ -26,8 +27,8 @@ namespace txm {
         _running = false;
     }
 
-    void gameloop::fpset(int framerate) {
-        _fps = framerate;
+    void gameloop::setframerate(int fps) {
+        _fps = fps;
         _framedur = std::chrono::duration<double>(1.0 / _fps);
     }
 
