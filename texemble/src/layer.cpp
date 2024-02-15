@@ -9,7 +9,7 @@ namespace txm {
 
     template <int width, int height>
     layer<width, height>::~layer() {
-        removeall();
+        for (entity* ent : _entities) delete ent;
     }
 
     template <int width, int height>
@@ -27,11 +27,4 @@ namespace txm {
         delete entity;
     }
         
-
-    template <int width, int height>
-    void layer<width, height>::removeall() {
-        for (entity* entity : _entities)
-            remove(entity);
-    }
-
 }

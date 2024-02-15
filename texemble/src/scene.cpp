@@ -42,23 +42,23 @@ namespace txm {
     }
 
     template <int width, int height>
-    void scene<width, height>::render() const {
-        std::array<char, width * height> renderspace;
-        renderspace.fill(' ');
+    void scene<width, height>::render(int offx, int offy) const {
+        std::array<char, width * height> viewport;
+        viewport.fill(' ');
         for (const auto& ent : _entities) {
             for (int y = 0; y < ent->h(); y++) {
+                const int down = ent->y + y - offy;
+                if (down < 0 || down >= height) continue;
                 for (int x = 0; x < ent->w(); x++) {
-                    const unsigned int rendenty = ent->y < 0 ? height + ent->y : ent->y;
-                    const unsigned int rendentx = ent->x < 0 ? width + ent->x : ent->x;
-                    const unsigned int chardown = ((rendenty + y) % height) * width;
-                    const unsigned int charright = (rendentx + x) % width;
-                    renderspace[chardown + charright] = ent->s.c[y * ent->w() + x];
+                    const int right = ent->x + x - offx;
+                    if (right < 0 || right >= width) continue;
+                    viewport[down * width + right] = ent->s.c[y * ent->w() + x];
                 }
             }
         }
 
         for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) std::cout << renderspace[y * width + x];
+            for (int x = 0; x < width; x++) std::cout << viewport[y * width + x];
             std::cout << std::endl;
         }
     }

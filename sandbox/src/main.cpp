@@ -1,7 +1,6 @@
 #include <texemble.h>
 
 #include <random>
-#include <vector>
 
 #define WIDTH 64
 #define HEIGHT 32
@@ -16,21 +15,26 @@ int random(int min, int max) {
 int main() {
     txm::scene<WIDTH, HEIGHT> myscene;
 
-    txm::sprite plane = { 5, 3, {
-        "  T  ",
-        "<=I=>",
-        "  -  ",
+    txm::sprite stickman = { 3, 3, {
+        " O ",
+        "/|\\",
+        "/ \\",
     }};
 
-    txm::sprite bullet = { 1, 1, "*"};
+    txm::sprite rock = { 3, 3, {
+        " # ",
+        "## ",
+        "###",
+    }};
 
-    txm::sprite asteroid = { 2, 2, "####"};
-
-    txm::entity player = { WIDTH / 2, HEIGHT / 2, plane };
+    txm::entity player = { WIDTH / 2, HEIGHT / 2, stickman };
     myscene.add(&player);
 
-    txm::layer projectiles = &myscene;
-    txm::layer enemies = &myscene;
+    txm::layer obstacles = &myscene;
+    obstacles.add(new txm::entity { 20, 16, rock });
+    obstacles.add(new txm::entity { 53, 6, rock });
+    obstacles.add(new txm::entity { 15, 24, rock });
+    obstacles.add(new txm::entity { 34, 29, rock });
 
     txm::input::handle([&](char in) {
         if (in == 'w') player.y--;
@@ -38,65 +42,16 @@ int main() {
         if (in == 'a') player.x--;
         if (in == 'd') player.x++;
 
-        if (in == ' ') projectiles.add(new txm::entity { player.x + 2, player.y, bullet});
-
         if (in == 'q') txm::gameloop::stop();
     });
-
-    int score = 0;
-    const int goal = 10;
 
     int framecount = 0;
     txm::gameloop::setframerate(24);
     txm::gameloop::start([&]() {
-
+ 
         myscene.clear();
 
-        std::cout << "SCORE: " << score << "/" << goal << std::endl;
-
-        if (framecount % 64 == 0)
-            enemies.add(new txm::entity { random(0, WIDTH - 1), 0, asteroid });
-
-        for (txm::entity* projectile : projectiles.list()) {
-            if (!myscene.contains(projectile)) myscene.add(projectile);
-            projectile->y--;
-
-            if (projectile->y <= 0) {
-                projectiles.remove(projectile);
-                continue;
-            }
-        }
-
-        for (txm::entity* enemy : enemies.list()) {
-            if (framecount % 4 == 0) enemy->y++;
-
-            if (enemy->y > HEIGHT - 2) {
-                score--;
-                enemies.remove(enemy);
-            }
-
-            for (txm::entity* projectile : projectiles.list()) {
-                if (txm::collision::aabb(*projectile, *enemy)) {
-                    score++;
-                    enemies.remove(enemy);
-                    break;
-                }
-            }
-            
-            if (txm::collision::aabb(player, *enemy)) {
-                txm::gameloop::stop();
-                std::cout << "YOU LOST!" << std::endl;
-            }
-
-            if (score == goal) {
-                txm::gameloop::stop();
-                std::cout << "YOU WON!" << std::endl;
-            }
-        }
-                
-        myscene.render();
-
-        framecount++;
+        myscene.render(player.x - WIDTH / 2, player.y - HEIGHT / 2);
 
     });
 }

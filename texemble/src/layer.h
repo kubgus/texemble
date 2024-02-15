@@ -18,7 +18,6 @@ namespace txm {
         
         void add(entity* entity);
         void remove(entity* entity);
-        void removeall();
 
         inline const std::vector<entity*>& list() const { return _entities; }
     private:

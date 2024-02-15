@@ -16,7 +16,7 @@ namespace txm {
         inline std::set<entity*> list();
 
         inline void clear() const;
-        void render() const;
+        void render(int offx = 0, int offy = 0) const;
     private:
         std::set<entity*> _entities;
     };
