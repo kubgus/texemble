@@ -16,4 +16,19 @@ namespace txm {
         return (lright > rleft && lleft < rright && lbottom > rtop && ltop < rbottom);
     }
 
+    bool collision::charcol(const entity& left, const entity& right) {
+        if (!aabb(left, right)) return false;
+
+        for (int l = 0; l < left.s.w * left.s.h; l++) {
+            if (left.s.c[l] == ' ') continue;
+            int offx = left.x + (l % left.w()) - right.x;
+            int offy = left.y + (l / left.w()) - right.y;
+            if (left.s.c[l * left.w() + (l % left.w())] == ' ') continue;
+            if (offx >= 0 && offx < right.w() && offy >= 0 && offy < right.h() && right.s.c[offy * right.w() + offx] != ' ')
+                return true;
+        }
+
+        return false;
+    }
+
 }

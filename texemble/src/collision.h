@@ -2,11 +2,10 @@
 
 #include "entity.h"
 
-namespace txm {
+namespace txm::collision {
 
-    class collision {
-    public:
-        static bool aabb(const entity& left, const entity& right);
-    };
+    bool aabb(const entity& left, const entity& right);
+
+    bool charcol(const entity& left, const entity& right);
 
 }
