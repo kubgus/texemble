@@ -2,6 +2,9 @@
 
 #include "collision.h"
 
+#include "debug.h"
+#include "debug.cpp"
+
 #include "entity.h"
 
 #include "gameloop.h"

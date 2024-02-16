@@ -35,7 +35,7 @@ int main() {
  
         myscene.clear();
 
-        std::cout << txm::collision::charcol(player, block);
+        txm::debug::lineout("Collision is ", txm::collision::charcol(player, block) ? "" : "not");
 
         myscene.render();
 
