@@ -5,6 +5,10 @@
 
 namespace txm {
 
+    enum direction {
+        LEFT, RIGHT
+    };
+
     struct sprite {
         int w, h;
         std::vector<char> c;
@@ -19,6 +23,8 @@ namespace txm {
             for (std::string s : ss)
                 for (char x : s) c.push_back(x);
         }
+
+        void rotate(direction dir);
     };
 
 }
