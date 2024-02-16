@@ -1,57 +1,100 @@
 #include <texemble.h>
 
-#include <random>
-
 #define WIDTH 64
 #define HEIGHT 32
-
-int random(int min, int max) {
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> distribution(min, max);
-    return distribution(gen);
-}
 
 int main() {
     txm::scene<WIDTH, HEIGHT> myscene;
 
-    txm::sprite stickman = { 3, 3, {
-        " O ",
-        "/|\\",
-        "/ \\",
+    txm::sprite basket = { 5, 3, {
+        "/~~~\\",
+        "UUUUU",
+        " UUU ",
     }};
 
-    txm::sprite rock = { 3, 3, {
-        " # ",
-        "## ",
-        "###",
+    txm::sprite cherry = { 3, 4, {
+        " / ",
+        "OOO",
+        "OOO",
+        "OOO",
     }};
 
-    txm::entity player = { WIDTH / 2, HEIGHT / 2, stickman };
+    txm::sprite watermelon = { 4, 3, {
+        "----",
+        "\\WW/",
+        " -- ",
+    }};
+
+    txm::sprite bomb = { 3, 4, {
+        " ! ",
+        " B ",
+        "BBB",
+        " B ",
+    }};
+
+    txm::entity player = { WIDTH / 2 + 3, HEIGHT - 5, basket };
     myscene.add(&player);
 
-    txm::layer obstacles = &myscene;
-    obstacles.add(new txm::entity { 20, 16, rock });
-    obstacles.add(new txm::entity { 53, 6, rock });
-    obstacles.add(new txm::entity { 15, 24, rock });
-    obstacles.add(new txm::entity { 34, 29, rock });
+    txm::layer enemies = &myscene;
 
     txm::input::handle([&](char in) {
-        if (in == 'w') player.y--;
-        if (in == 's') player.y++;
         if (in == 'a') player.x--;
         if (in == 'd') player.x++;
 
         if (in == 'q') txm::gameloop::stop();
     });
 
-    int framecount = 0;
+    int score = 0;
+
+    int difficulty = 240;
+    int spawnrate = 48;
+    int gravity = 12;
+
+    int framecount = 0; 
     txm::gameloop::setframerate(24);
     txm::gameloop::start([&]() {
  
         myscene.clear();
 
-        myscene.render(player.x - WIDTH / 2, player.y - HEIGHT / 2);
+        std::cout << "SCORE: " << score << "  ENDLESS: " << framecount / 24 << std::endl;
+
+        if (framecount % spawnrate == 0)
+            enemies.add(new txm::entity {
+                txm::random::minmax(0, WIDTH - 5), 2,
+                txm::random::element<txm::sprite>({ cherry, watermelon, bomb })
+            });
+
+
+        for (int i = 0; i < enemies.list().size(); i++) {
+            txm::entity* ent = enemies.list()[i];
+            if (framecount % gravity == 0) ent->y++;
+            bool danger = ent->s.c[1] == '!' ? true : false;
+            if (ent->y >= HEIGHT) {
+                if (danger) enemies.remove(ent);
+                else {
+                    txm::gameloop::stop();
+                    std::cout << "FAILED!" << std::endl;
+                }
+            }
+            if (txm::collision::aabb(player, *ent)) {
+                if (danger) {
+                    txm::gameloop::stop();
+                    std::cout << "BOOM!" << std::endl;
+                } else {
+                    enemies.remove(ent);
+                    score++;
+                }
+            }
+        }
+
+        if (framecount % difficulty == 0) {
+            spawnrate -= spawnrate - 4 == 0 ? 0 : 4;
+            gravity -= gravity - 2 == 0 ? 0 : 2;
+        }
+
+        myscene.render();
+
+        framecount++;
 
     });
 }

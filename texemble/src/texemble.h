@@ -11,6 +11,9 @@
 
 #include "input.h"
 
+#include "random.h"
+#include "random.cpp"
+
 #include "scene.h"
 #include "scene.cpp"
 
