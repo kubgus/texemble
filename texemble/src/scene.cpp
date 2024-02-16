@@ -52,6 +52,7 @@ namespace txm {
                 for (int x = 0; x < ent->w(); x++) {
                     const int right = ent->x + x - offx;
                     if (right < 0 || right >= width) continue;
+                    if (ent->s.c[y * ent->w() + x] == ' ') continue;
                     viewport[down * width + right] = ent->s.c[y * ent->w() + x];
                 }
             }
